@@ -1496,10 +1496,7 @@ async function enviarFormulario() {
   };
 
   try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    await fetch("https://script.google.com/macros/s/AKfycbwO3b8Qc5Yd9Iif4E8KvtmJ7woJF03zh_NBYyBWIg0Iz2x05Xn0SzAwl2IHZPjrMmisiQ/exec", { method:'POST', body: JSON.stringify(Object.fromEntries(new FormData(document.getElementById('form-principal')))) });
   } catch(e) {}
 
   // Mostra tela de sucesso independente do resultado
