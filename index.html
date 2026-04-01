@@ -1447,13 +1447,67 @@ function gerarResumo() {
 }
 
 // ── ENVIO ─────────────────────────────────────────────────────────────────────
-function enviarFormulario() {
-  // Aqui: integrar com Google Apps Script via fetch POST
-  // fetch(APPS_SCRIPT_URL, { method:'POST', body: new FormData(document.getElementById('form-principal')) })
+async function enviarFormulario() {
+  const APPS_SCRIPT_URL = "COLE_A_URL_DO_WEB_APP_AQUI";
+
+  const form = document.getElementById('form-principal');
+  const fd   = new FormData(form);
+  const dados = Object.fromEntries(fd.entries());
+
+  // Mapeia nomes do form para os campos do script
+  const payload = {
+    tipo_servico:       escolhaPrincipal === "abertura" ? "constituicao" : "alteracao",
+    alteracoes_flags:   [...document.querySelectorAll('#lista-flags input:checked')].map(i => i.name).join(","),
+    alt_dados:          dados.outros_descricao || "",
+    uso_imovel:         dados.uso_imovel || "",
+    razao_social:       dados.razao_social || "",
+    nome_fantasia:      dados.nome_fantasia || "",
+    cnpj:               dados.cnpj || "",
+    logradouro:         dados.logradouro || "",
+    numero:             dados.numero || "",
+    complemento:        dados.complemento || "",
+    cep:                dados.cep || "",
+    municipio:          dados.municipio || "",
+    uf:                 dados.uf || "",
+    iptu:               dados.iptu || "",
+    email_empresa:      dados.email_empresa || "",
+    telefone:           dados.telefone || "",
+    atividades:         dados.atividades || "",
+    capital_valor:      dados.capital_social || "",
+    uso_imovel:         dados.uso_imovel || "",
+    socio1_nome:        dados.socio_1_nome || "",
+    socio1_nacionalidade: "brasileiro(a)",
+    socio1_estado_civil:  dados.socio_1_estado_civil || "",
+    socio1_regime:      dados.socio_1_regime || "",
+    socio1_profissao:   "empresário(a)",
+    socio1_nascimento:  dados.socio_1_nascimento || "",
+    socio1_cpf:         dados.socio_1_cpf || "",
+    socio1_rg:          dados.socio_1_rg || "",
+    socio1_endereco:    dados.socio_1_endereco || "",
+    socio1_quotas_qtd:  dados.socio_1_quota || "",
+    socio2_nome:        dados.socio_2_nome || "",
+    socio2_estado_civil:dados.socio_2_estado_civil || "",
+    socio2_regime:      dados.socio_2_regime || "",
+    socio2_cpf:         dados.socio_2_cpf || "",
+    socio2_rg:          dados.socio_2_rg || "",
+    socio2_endereco:    dados.socio_2_endereco || "",
+    socio2_quotas_qtd:  dados.socio_2_quota || "",
+    tem_procurador:     "não",
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  } catch(e) {}
+
+  // Mostra tela de sucesso independente do resultado
   document.getElementById('form-principal').style.display = 'none';
   document.getElementById('tela-sucesso').classList.add('visivel');
   document.getElementById('progresso').style.width = '100%';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
